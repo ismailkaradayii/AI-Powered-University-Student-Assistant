@@ -1,0 +1,103 @@
+{
+  "info": {
+    "name": "SWE488 - AI-Powered University Student Assistant (TC-01 to TC-05)",
+    "_postman_id": "swe488-university-assistant-collection",
+    "description": "Official Postman Test Suite for SWE488 Test Cases TC-01, TC-02, TC-03, TC-04, and TC-05.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "TC-01: Student Secure Login (Valid Credentials)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/auth/login/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "auth", "login", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"student_number\": \"20220236\",\n  \"password\": \"password123\"\n}"
+        }
+      }
+    },
+    {
+      "name": "TC-02: Login with Incorrect Password (Negative Test - HTTP 401)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/auth/login/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "auth", "login", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"student_number\": \"20220236\",\n  \"password\": \"wrongpassword\"\n}"
+        }
+      }
+    },
+    {
+      "name": "TC-03: Course & Exam Info Query (SWE488 Midterm <3s)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/chatbot/ask/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "chatbot", "ask", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"When is the SWE488 midterm exam?\"\n}"
+        }
+      }
+    },
+    {
+      "name": "TC-04: Regulation Knowledge Base Query (RAG Add-Drop Rules)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/chatbot/ask/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "chatbot", "ask", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"question\": \"What are the course add-drop rules?\"\n}"
+        }
+      }
+    },
+    {
+      "name": "TC-05: Admin Panel Data Update (Create Announcement)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{jwt_access_token}}" }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/announcements/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "announcements", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"SWE488 Midterm Classroom Update\",\n  \"content\": \"The SWE488 midterm exam will take place in Amfi-2 at 10:00.\",\n  \"is_important\": true\n}"
+        }
+      }
+    }
+  ]
+}
