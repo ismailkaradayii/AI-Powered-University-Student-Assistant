@@ -10,9 +10,11 @@ class StudentUserManager(BaseUserManager):
     """Custom manager where student_number is the unique identifier for authentication."""
 
     def create_user(self, student_number, password=None, **extra_fields):
-        if not student_number:
+        cleaned_number = str(student_number or "").strip()
+        if not cleaned_number:
             raise ValueError("The Student Number field must be set.")
-        user = self.model(student_number=str(student_number).strip(), **extra_fields)
+        extra_fields.setdefault("is_active", True)
+        user = self.model(student_number=cleaned_number, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -21,6 +23,12 @@ class StudentUserManager(BaseUserManager):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         extra_fields.setdefault("is_active", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser must have is_staff=True.")
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser must have is_superuser=True.")
+
         return self.create_user(student_number, password, **extra_fields)
 
 
@@ -33,6 +41,7 @@ class StudentUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = StudentUserManager()
 
@@ -42,6 +51,11 @@ class StudentUser(AbstractBaseUser, PermissionsMixin):
     class Meta:
         verbose_name = "Student User"
         verbose_name_plural = "Student Users"
+        ordering = ["student_number"]
+
+    @property
+    def role(self) -> str:
+        return "admin" if self.is_staff else "student"
 
     def __str__(self):
         return f"{self.student_number} - {self.full_name}"
